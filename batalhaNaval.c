@@ -1,32 +1,15 @@
 #include <stdio.h>
 
 #define TAM 10
-#define NAVIO 3
-#define VALOR_AGUA 0
-#define VALOR_NAVIO 3
+#define TAM_HAB 5
 
-// Função para verificar se é possível posicionar um navio sem sair dos limites ou sobrepor
-int pode_posicionar(int tabuleiro[TAM][TAM], int linhas[], int colunas[], int tamanho) {
-    for (int i = 0; i < tamanho; i++) {
-        int l = linhas[i];
-        int c = colunas[i];
-        if (l < 0 || l >= TAM || c < 0 || c >= TAM || tabuleiro[l][c] != VALOR_AGUA) {
-            return 0; // inválido
-        }
-    }
-    return 1; // válido
+void inicializaTabuleiro(int tabuleiro[TAM][TAM]) {
+    for (int i = 0; i < TAM; i++)
+        for (int j = 0; j < TAM; j++)
+            tabuleiro[i][j] = 0;
 }
 
-// Função para posicionar o navio
-void posicionar_navio(int tabuleiro[TAM][TAM], int linhas[], int colunas[], int tamanho) {
-    for (int i = 0; i < tamanho; i++) {
-        tabuleiro[linhas[i]][colunas[i]] = VALOR_NAVIO;
-    }
-}
-
-// Função para imprimir o tabuleiro
-void imprimir_tabuleiro(int tabuleiro[TAM][TAM]) {
-    printf("Tabuleiro de Batalha Naval:\n\n");
+void imprimeTabuleiro(int tabuleiro[TAM][TAM]) {
     for (int i = 0; i < TAM; i++) {
         for (int j = 0; j < TAM; j++) {
             printf("%d ", tabuleiro[i][j]);
@@ -35,51 +18,30 @@ void imprimir_tabuleiro(int tabuleiro[TAM][TAM]) {
     }
 }
 
+// Exemplo: habilidade em cruz
+void habilidadeCruz(int tabuleiro[TAM][TAM], int x, int y) {
+    for (int i = -2; i <= 2; i++) {
+        if (x + i >= 0 && x + i < TAM)
+            tabuleiro[x + i][y] = 5;
+        if (y + i >= 0 && y + i < TAM)
+            tabuleiro[x][y + i] = 5;
+    }
+}
+
 int main() {
     int tabuleiro[TAM][TAM];
+    inicializaTabuleiro(tabuleiro);
 
-    // Inicializa o tabuleiro com água
-    for (int i = 0; i < TAM; i++) {
-        for (int j = 0; j < TAM; j++) {
-            tabuleiro[i][j] = VALOR_AGUA;
-        }
-    }
+    // Posiciona um navio (exemplo)
+    tabuleiro[4][4] = 3;
+    tabuleiro[4][5] = 3;
+    tabuleiro[4][6] = 3;
 
-    // Navio 1 - Horizontal (linha 2, colunas 1,2,3)
-    int linha1[] = {2, 2, 2};
-    int coluna1[] = {1, 2, 3};
+    // Ativa habilidade
+    habilidadeCruz(tabuleiro, 4, 5);
 
-    // Navio 2 - Vertical (coluna 6, linhas 5,6,7)
-    int linha2[] = {5, 6, 7};
-    int coluna2[] = {6, 6, 6};
-
-    // Navio 3 - Diagonal principal (3,3 → 5,5)
-    int linha3[] = {3, 4, 5};
-    int coluna3[] = {3, 4, 5};
-
-    // Navio 4 - Diagonal secundária (0,9 → 2,7)
-    int linha4[] = {0, 1, 2};
-    int coluna4[] = {9, 8, 7};
-
-    // Posicionar os navios se não houver sobreposição ou limite
-    if (pode_posicionar(tabuleiro, linha1, coluna1, NAVIO)) {
-        posicionar_navio(tabuleiro, linha1, coluna1, NAVIO);
-    }
-
-    if (pode_posicionar(tabuleiro, linha2, coluna2, NAVIO)) {
-        posicionar_navio(tabuleiro, linha2, coluna2, NAVIO);
-    }
-
-    if (pode_posicionar(tabuleiro, linha3, coluna3, NAVIO)) {
-        posicionar_navio(tabuleiro, linha3, coluna3, NAVIO);
-    }
-
-    if (pode_posicionar(tabuleiro, linha4, coluna4, NAVIO)) {
-        posicionar_navio(tabuleiro, linha4, coluna4, NAVIO);
-    }
-
-    // Exibe o tabuleiro final
-    imprimir_tabuleiro(tabuleiro);
+    // Mostra o tabuleiro
+    imprimeTabuleiro(tabuleiro);
 
     return 0;
 }
